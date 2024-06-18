@@ -30,7 +30,7 @@ RTE := Gui()
 RTE.Opt(" +Border +Resize")
 RTE.Title := "Quartz"
 RTE.BackColor := "Black"
-RTE.Show("w950 h445")
+RTE.Show("w860 h445")
 WV2 := WebView2.create(RTE.Hwnd)
 HTML := WV2.CoreWebView2
 HTML.Navigate('file:///' path.html)
@@ -92,12 +92,27 @@ Exit() {
     ExitApp()
 }
 
-testing(str) {
-    HTML.ExecuteScript('console.log("' str '")', handlerObj := WebView2.Handler(funct))
+log(str) {
+    HTML.ExecuteScript('console.log(``' str '``);'
+    , handlerObj := WebView2.Handler(EvalCompletedHandler))
+
+    EvalCompletedHandler(handler, errorCode, resultObjectAsJson) {
+        if errorCode != 0 {
+            MsgBox 'Error Code: ' errorCode '`nResult: ' StrGet(resultObjectAsJson)
+        }
+    }
 }
-funct() {
-    str := 'hi'
-    return str
+
+OnMessage(WM_SIZE := 0x0005, MinSizing)
+
+MinSizing(wParam, *) {
+    if !wParam {
+        WinGetPos(,, &w, &h, RTE.Hwnd)
+        if w <= 880
+            RTE.show('w880')
+        if h <= 345
+            RTE.show('h345')
+    }
 }
 
 #J::{
@@ -106,7 +121,9 @@ funct() {
         setText(input.value)
 }
 #k::{
-    testing(str := 'hello there')
+    input := InputBox('Log a message to the JS console', 'Console.log')
+    if input.result != 'cancel'
+        log(str := input.value)
 }
 
 NavigationCompletedEventHandler(handler, ICoreWebView2, NavigationCompletedEventArgs) {
@@ -152,10 +169,10 @@ gui_pos(gui, x_mod?, y_mod?, w_mod?, h_mod?) {
     gui.getPos(&x, &y, &w, &h)
     gui_pos := ""
     IsSet(x_mod) ? (gui_pos += "x" . x + x_mod) : (gui_pos += "x" x " ")
-        IsSet(y_mod) ? (gui_pos += "y" . y + y_mod) : (gui_pos += "y" y " ")
-            IsSet(w_mod) ? (gui_pos += "w" . w + w_mod) : (gui_pos += "w" w " ")
-                IsSet(h_mod) ? (gui_pos += "h" . h + h_mod) : (gui_pos += "h" h " ")
-                    return gui_pos
+    IsSet(y_mod) ? (gui_pos += "y" . y + y_mod) : (gui_pos += "y" y " ")
+    IsSet(w_mod) ? (gui_pos += "w" . w + w_mod) : (gui_pos += "w" w " ")
+    IsSet(h_mod) ? (gui_pos += "h" . h + h_mod) : (gui_pos += "h" h " ")
+    return gui_pos
 }
 
 Eval(script) {
@@ -165,7 +182,6 @@ Eval(script) {
         if errorCode != 0 {
             MsgBox 'errorCode: ' errorCode '`nresult: ' StrGet(resultObjectAsJson)
         }
-        
     }
 }
 
