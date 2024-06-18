@@ -2,8 +2,8 @@
  * @description Rich Text Editor using AHK and JS/HTML/CSS
  * @file Quartz.ahk
  * @author Laser Made
- * @date 2024/06/17
- * @version 0.3
+ * @date 2024/06/18
+ * @version 0.3.1
  * @versioncodename Alpha 3
  ***********************************************************************/
 
@@ -11,7 +11,7 @@
 #Requires AutoHotkey v2.0+
 #Include <WebView2>
 
-Version := "0.3"
+Version := "0.3.1"
 Title := A_ScriptName
 CodeName := "Alpha 3"
 Description := "Rich Text Editor using AHK and JS/HTML/CSS"
