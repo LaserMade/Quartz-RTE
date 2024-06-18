@@ -35,6 +35,11 @@ WV2 := WebView2.create(RTE.Hwnd)
 HTML := WV2.CoreWebView2
 HTML.Navigate('file:///' path.html)
 HTML.AddHostObjectToScript('ahk', { about: about, OpenFile: OpenFile, SaveFile: SaveFile, get: getText, getHTML: getHTML, exit: Exit })
+RTE.OnEvent('Close', (*) => {function: (
+    HTML := WV2 := 0
+    RTE.Destroy()
+    ExitApp()
+)})
 
 OpenFile() {
     selected := FileSelect(,, 'Select a file to open', 'Text Files (*.txt; *.html; *.css; *.js; *.ahk; *.ah2; *.ahk2; *.md; *.ini;)')
@@ -103,18 +108,6 @@ log(str) {
     }
 }
 
-OnMessage(WM_SIZE := 0x0005, MinSizing)
-
-MinSizing(wParam, *) {
-    if !wParam {
-        WinGetPos(,, &w, &h, RTE.Hwnd)
-        if w <= 880
-            RTE.show('w880')
-        if h <= 345
-            RTE.show('h345')
-    }
-}
-
 #J::{
     input := InputBox('Enter what you would like to change the editor contents to: ', 'Change Editor Content')
     if input.result != 'cancel'
@@ -142,15 +135,28 @@ NavigationCompletedEventHandler(handler, ICoreWebView2, NavigationCompletedEvent
 
 RTE.OnEvent("Size", gui_size)
 
-    ;when resizing the window also change the size of the leaflet container and the position of onscreen elements
-    gui_size(GuiObj, MinMax, Width, Height) {
-        CoordMode("Menu", "Client")
-        RTE.GetPos(, , &w, &h)
-        LM_Height := h, LM_Width := w
-        if (MinMax != -1) {
-            try WV2.Fill()
-        }
+/*This function exists to move AHK gui elements when resizing the window and 
+to also change the size of the WebView2 container */
+gui_size(GuiObj, MinMax, Width, Height) {
+    CoordMode("Menu", "Client")
+    RTE.GetPos(, , &w, &h)
+    HTML.height := h, HTML.width := w
+    if (MinMax != -1) {
+        try WV2.Fill()
     }
+}
+
+OnMessage(WM_SIZE := 0x0005, MinSizing)
+
+MinSizing(wParam, *) {
+    if !wParam {
+        WinGetPos(,, &w, &h, RTE.Hwnd)
+        if w <= 880
+            RTE.show('w880')
+        if h <= 345
+            RTE.show('h345')
+    }
+}
 
 mid_pos(gui) {
     CoordMode("Menu", "Screen")
