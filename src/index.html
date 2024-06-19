@@ -6,8 +6,10 @@
     <title>Quartz</title>
     <!-- Include Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
+    <link href="https://fonts.cdnfonts.com/css/times-new-roman" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inconsolata&family=Montserrat&family=Poppins&family=Roboto&display=swap');
+        /* And other fonts */
     </style>
     <!-- Include Quill stylesheet -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
@@ -74,10 +76,7 @@
     <script>
         const FontAttributor = Quill.import('formats/font');
         FontAttributor.whitelist = [
-        'Poppins',
-        'Montserrat',
-        'Roboto',
-        'Inconsolata'
+        'Times New Roman','Roboto','Poppins','Montserrat','Inconsolata'
         ];
         Quill.register(FontAttributor, true);
 
@@ -86,7 +85,7 @@
             theme: 'snow',
             modules: {
                 toolbar: [
-                [{ 'font': ['Roboto', 'Poppins', 'Montserrat', 'Inconsolata'] }],
+                [{ 'font': ['Times New Roman','Roboto','Poppins','Montserrat','Inconsolata']}],
                 ['bold', 'italic', 'underline', 'strike'],
                 ['blockquote', 'code-block'],
                 [{ header: [1, 2, 3, 4, false] }],

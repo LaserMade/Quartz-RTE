@@ -6,7 +6,7 @@
 
 body {
   background-color: #d8d0d0;
-}
+} 
 
 #editor {
   height: calc(100vh - 95px);
@@ -18,7 +18,22 @@ body {
 div[role="toolbar"] {
   margin: 0px 20px;
   background-color: linear-gradient(to right, #f5f5dc, #a9a9a9);
-  position: sticky;
+}
+
+.ql-snow .ql-picker.ql-expanded .ql-picker-label {
+  color: beige;
+}
+
+.tooltip {
+  display: none;
+}
+
+.tooltip.active {
+  position: relative;
+  z-index: 1000;
+  display: block;
+  color: black;
+  font-size: small;
 }
 
 header {
@@ -55,9 +70,27 @@ header {
   font-size: .7rem;
 }
 
+.ql-formats {
+  width: fit-content;
+}
+
 .ql-toolbar .ql-snow {
   position: sticky;
   z-index: 1000;
+}
+
+.ql-snow .ql-picker.ql-font  {
+  width: 140px;
+}
+
+.ql-picker-label {
+  min-width: fit-content;
+  position: relative;
+}
+
+span.ql-picker-label > svg {
+  position: relative;
+  right: 0px;
 }
 
 #rtf-doc {
@@ -121,7 +154,21 @@ ul > li:hover {
 
 /*------------------- fonts -------------------*/
 /* Set dropdown font-families */
-  
+ 
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='Times New Roman']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Times New Roman']::before
+{
+  content: 'Times New Roman';
+  font-family: 'Times New Roman';
+  width: fit-content;
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='Roboto']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Roboto']::before
+{
+  content: 'Roboto';
+  font-family: 'Roboto';
+}
 
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='Poppins']::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Poppins']::before
@@ -137,12 +184,6 @@ ul > li:hover {
   font-family: 'Montserrat';
 }
 
-.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='Roboto']::before,
-.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Roboto']::before
-{
-  content: 'Roboto';
-  font-family: 'Roboto';
-}
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='Inconsolata']::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Inconsolata']::before
 {
@@ -151,6 +192,10 @@ ul > li:hover {
 }
 
 /* Set content font-families */
+.ql-font-Times-New-Roman {
+  font-family: 'Times New Roman', sans-serif;
+}
+
 .ql-font-Roboto {
   font-family: 'Roboto', sans-serif;
 }

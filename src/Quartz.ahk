@@ -2,18 +2,21 @@
  * @description Rich Text Editor using AHK and JS/HTML/CSS
  * @file Quartz.ahk
  * @author Laser Made
- * @date 2024/06/18
- * @version 0.3.1
+ * @date 2024/06/19
+ * @version 0.3.2
  * @versioncodename Alpha 3
  ***********************************************************************/
 
 #SingleInstance Force
 #Requires AutoHotkey v2.0+
 #Include <WebView2>
-
-Version := "0.3.1"
+/*You must have WebView2.ahk, Comvar.ahk, and WebView2.dll in the proper directories.
+For instance, my WebView2.ahk file is located at: My Documents\AutoHotkey\lib\WebView2.ahk
+The "Documents/AutoHotkey/lib" directory is a valid AHK library path that AutoHotkey.exe looks in when including files with <brackets>
+*/
+Version := "0.3.2"
 Title := A_ScriptName
-CodeName := "Alpha 3"
+CodeName := "Alpha " SubStr(Version, 3, 1)
 Description := "Rich Text Editor using AHK and JS/HTML/CSS"
 A_RootDir := StrReplace(A_ScriptDir, "\src", "")
 path := {}
@@ -42,7 +45,7 @@ RTE.OnEvent('Close', (*) => {function: (
 )})
 
 OpenFile() {
-    selected := FileSelect(,, 'Select a file to open', 'Text Files (*.txt; *.html; *.css; *.js; *.ahk; *.ah2; *.ahk2; *.md; *.ini;)')
+    selected := FileSelect(,, 'Select a file to open', 'Text Files (*.txt; *.rtf; *.html; *.css; *.js; *.ahk; *.ah2; *.ahk2; *.md; *.ini;)')
     if selected = "" || !FileExist(selected)
         return
     userFile := FileOpen(selected, "rw")
