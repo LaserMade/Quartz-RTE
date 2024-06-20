@@ -1,7 +1,9 @@
 // add tooltips on hover - not finished yet!!
 
-let options = document.querySelectorAll('.ql-formats');
+const options = document.querySelectorAll('.ql-formats');
 options.forEach(opt => {
+    let numFonts = 0;
+    let numHeaders = 0;
     opt.childNodes.forEach(child => {
         child.name = child.className.replace('ql-', '')
         const span = document.createElement('span')
@@ -33,9 +35,11 @@ options.forEach(opt => {
             break;
         }
         if (child.name.includes('font')){
-            span.textContent = 'Font'
+            span.textContent = numFonts==0 ? 'Font' : ''
+            numFonts++;
         } else if (child.name.includes('header')) {
-            span.textContent = 'Header/Size'
+            span.textContent = numHeaders==0 ? 'Header/Size' : ''
+            numHeaders++;
         } else if (child.name.includes('align')) {
             span.textContent = 'Align'
         } else if (child.name.includes('color')) {
@@ -45,17 +49,18 @@ options.forEach(opt => {
         }
         child.appendChild(span)
         child.addEventListener('mouseover', () => {
-            span.classList.add('active')
+            if (!child.classList.toString().includes('expanded')){
+                span.classList.add('active')
+            }
+            child.addEventListener('click', () => {
+                span.classList.remove('active')
+            })
         })
         child.addEventListener('mouseleave', () => {
             span.classList.remove('active')
         })
     })
 }); 
-
-//adds a tooltip as span on mouseover. Need mouseleave to remove and prevent duplicates with a static? or closure...
-//need to add a class to the span
-
 
 function newFile() {
     quill.setContents(new Delta());

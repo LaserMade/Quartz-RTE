@@ -8,6 +8,14 @@ body {
   background-color: #d8d0d0;
 } 
 
+/*This is not working yet*/
+.block-input {
+  pointer-events: none;
+  display: flex;
+  flex-grow: 1;
+  height: 30px;
+}
+
 #editor {
   height: calc(100vh - 95px);
   margin: 0px 30px;
@@ -59,7 +67,7 @@ header {
   font-size: medium;
 }
 
-.menu-item > button {
+.menu-item > a {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -141,7 +149,7 @@ ul > li:hover {
   display: inline-block;
 }
 
-.submenu li button {
+.submenu li a {
   text-decoration: none;
   color: white;
   width: 100%;

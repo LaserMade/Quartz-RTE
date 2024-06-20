@@ -2,19 +2,20 @@
  * @description Rich Text Editor using AHK and JS/HTML/CSS
  * @file Quartz.ahk
  * @author Laser Made
- * @date 2024/06/19
- * @version 0.3.2
- * @versioncodename Alpha 3
+ * @date 2024/06/20
+ * @version 0.4
+ * @versioncodename Alpha 4
  ***********************************************************************/
 
 #SingleInstance Force
 #Requires AutoHotkey v2.0+
 #Include <WebView2>
+#Include <javascript_strings>
 /*You must have WebView2.ahk, Comvar.ahk, and WebView2.dll in the proper directories.
 For instance, my WebView2.ahk file is located at: My Documents\AutoHotkey\lib\WebView2.ahk
 The "Documents/AutoHotkey/lib" directory is a valid AHK library path that AutoHotkey.exe looks in when including files with <brackets>
 */
-Version := "0.3.2"
+Version := "0.4"
 Title := A_ScriptName
 CodeName := "Alpha " SubStr(Version, 3, 1)
 Description := "Rich Text Editor using AHK and JS/HTML/CSS"
@@ -33,7 +34,7 @@ RTE := Gui()
 RTE.Opt(" +Border +Resize")
 RTE.Title := "Quartz"
 RTE.BackColor := "Black"
-RTE.Show("w860 h445")
+RTE.Show("w915 h445")
 WV2 := WebView2.create(RTE.Hwnd)
 HTML := WV2.CoreWebView2
 HTML.Navigate('file:///' path.html)
@@ -44,17 +45,54 @@ RTE.OnEvent('Close', (*) => {function: (
     ExitApp()
 )})
 
+/**
+ * @API
+ * To learn how to use the delta format in JavaScript (which all of the following AHK methods interact with) you need to learn about Deltas, and how to use them.
+ * https://quilljs.com/docs/delta
+ * Then you have to learn how to go about getting and modifying the contents of the editor.
+ * https://quilljs.com/docs/api#content
+ */
+
+
+/**
+ * @description
+ * There are multiple ways to handle document formatting. One way is to use ComObjects and Query the document class in windows.
+ * You can load a document from a file as a ComObject using ComObjGet.
+ * @example doc := ComObjGet('document.rtf')
+ * ;then you can use the properties of the document to determine it's formatting:
+ * doc.characters.item(1).text ;this will give you the first character in the document
+ * doc.characters.item(1).italic ;this will return 1 if the character is italic or 0 if it is not
+ * doc.sentences.item(1).text ;this will return the first sentence in the document, no formatting
+ * doc.content.text ;this will return the entirety of text in the document without any formatting
+ * doc.content.WordOpenXML ;this will return the entire document in Word Open XML format. It contains the formatting in XML
+ * @info
+ * {@link https://learn.microsoft.com/en-us/dotnet/api/microsoft.office.interop.word.range?view=word-pia|This Microsoft page} shows the properties of the Range object that can be used
+ * 
+ * You can also get more info about the com object using:
+ * @example MsgBox "Interface name: " ComObjType(doc, "name") "And value : " ComObjValue(doc)
+ */
 OpenFile() {
     selected := FileSelect(,, 'Select a file to open', 'Text Files (*.txt; *.rtf; *.html; *.css; *.js; *.ahk; *.ah2; *.ahk2; *.md; *.ini;)')
     if selected = "" || !FileExist(selected)
         return
-    userFile := FileOpen(selected, "rw")
+    
+    if selected.includes('.rtf') {          ;manually handle rtf file insert using clipboard and ComObjects
+        doc := ComObjGet(selected)
+        doc.content.formattedText.copy      ;Win32 API copy ComObj _Document content to Clipboard
+        sleep 200                           ;wait for the copy to finish, alternatively use ClipWait?
+        WinActivate(RTE.Hwnd)
+        Eval('quill.focus()')
+        SendMode("Input")                   ;Edge (and by extension, WebView2) only support Input mode
+        Send('{ctrl down}{v}{ctrl up}{ctrl down}{home}{ctrl up}')   ;paste the contents of the clipboard and go to the top
+        return
+    } ;else 
     script := 'quill.setContents(['
+    userFile := FileOpen(selected, "rw")
     while (!userFile.AtEOF) {
         line := userFile.ReadLine()
         script := script '{insert: "' line '\n"},'
     }
-    script := script '{insert: "\n"}]);'
+    script := script '{insert: "\n"}]);'                ;new lines must be added at the end of a delta
     Eval(script)
 }
 
@@ -154,8 +192,8 @@ OnMessage(WM_SIZE := 0x0005, MinSizing)
 MinSizing(wParam, *) {
     if !wParam {
         WinGetPos(,, &w, &h, RTE.Hwnd)
-        if w <= 880
-            RTE.show('w880')
+        if w <= 910
+            RTE.show('w910')
         if h <= 345
             RTE.show('h345')
     }
