@@ -78,12 +78,19 @@ OpenFile() {
     
     if selected.includes('.rtf') {          ;manually handle rtf file insert using clipboard and ComObjects
         doc := ComObjGet(selected)
+        tempClip := ClipboardAll()
+        ClipWait
         doc.content.formattedText.copy      ;Win32 API copy ComObj _Document content to Clipboard
-        sleep 200                           ;wait for the copy to finish, alternatively use ClipWait?
+        ClipWait
+        Sleep 300                           ;wait for the copy to finish, alternatively use ClipWait?
         WinActivate(RTE.Hwnd)
         Eval('quill.focus()')
         SendMode("Input")                   ;Edge (and by extension, WebView2) only support Input mode
         Send('{ctrl down}{v}{ctrl up}{ctrl down}{home}{ctrl up}')   ;paste the contents of the clipboard and go to the top
+        Sleep 500
+        A_Clipboard := tempClip
+        Sleep 300
+        tempClip := ''
         return
     } ;else 
     script := 'quill.setContents(['
