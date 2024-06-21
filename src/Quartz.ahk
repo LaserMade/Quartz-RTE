@@ -9,8 +9,9 @@
 
 #SingleInstance Force
 #Requires AutoHotkey v2.0+
-#Include <WebView2>
-#Include <javascript_strings>
+#Include <WebView2\WebView2>
+#Include <Extensions\javascript_strings>
+#Include <Directives\__AE.v2>
 /*You must have WebView2.ahk, Comvar.ahk, and WebView2.dll in the proper directories.
 For instance, my WebView2.ahk file is located at: My Documents\AutoHotkey\lib\WebView2.ahk
 The "Documents/AutoHotkey/lib" directory is a valid AHK library path that AutoHotkey.exe looks in when including files with <brackets>
@@ -78,19 +79,27 @@ OpenFile() {
     
     if selected.includes('.rtf') {          ;manually handle rtf file insert using clipboard and ComObjects
         doc := ComObjGet(selected)
-        tempClip := ClipboardAll()
-        ClipWait
-        doc.content.formattedText.copy      ;Win32 API copy ComObj _Document content to Clipboard
-        ClipWait
-        Sleep 300                           ;wait for the copy to finish, alternatively use ClipWait?
+        ; tempClip := ClipboardAll()
+        ; ClipWait()
+        AE.SM(&sm)
+        AE.cBakClr(&cBak)
+        doc.content.formattedText.copy()
+        ; ClipWait()
+        AE.cSleep()
+        ; Sleep(300)                           ;wait for the copy to finish, alternatively use ClipWait?
         WinActivate(RTE.Hwnd)
         Eval('quill.focus()')
-        SendMode("Input")                   ;Edge (and by extension, WebView2) only support Input mode
+        ; SendMode("Input")                   ;Edge (and by extension, WebView2) only support Input mode
         Send('{ctrl down}{v}{ctrl up}{ctrl down}{home}{ctrl up}')   ;paste the contents of the clipboard and go to the top
-        Sleep 500
-        A_Clipboard := tempClip
-        Sleep 300
-        tempClip := ''
+        Send(key.ctrldown key.v key.ctrl)
+        Sleep(500)
+        ; AE.cSleep(100)
+        ; A_Clipboard := tempClip
+        ; Sleep(300)
+        ; tempClip := ''
+        AE.rSM(sm)
+        AE.cRestore(cBak)
+
         return
     } ;else 
     script := 'quill.setContents(['
@@ -151,7 +160,7 @@ log(str) {
 
     EvalCompletedHandler(handler, errorCode, resultObjectAsJson) {
         if errorCode != 0 {
-            MsgBox 'Error Code: ' errorCode '`nResult: ' StrGet(resultObjectAsJson)
+            MsgBox('Error Code: ' errorCode '`nResult: ' StrGet(resultObjectAsJson))
         }
     }
 }
@@ -234,7 +243,7 @@ Eval(script) {
     HTML.ExecuteScript(script, handlerObj)
     ExecuteScriptCompletedHandler(handler, errorCode, resultObjectAsJson) {
         if errorCode != 0 {
-            MsgBox 'errorCode: ' errorCode '`nresult: ' StrGet(resultObjectAsJson)
+            MsgBox('errorCode: ' errorCode '`nresult: ' StrGet(resultObjectAsJson))
         }
     }
 }
