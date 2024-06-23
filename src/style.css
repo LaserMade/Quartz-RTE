@@ -1,221 +1,215 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 body {
-  background-color: #d8d0d0;
-} 
+	background-color: #d8d0d0;
+}
 
 /*This is not working yet*/
 .block-input {
-  pointer-events: none;
-  display: flex;
-  flex-grow: 1;
-  height: 30px;
+	pointer-events: none;
+	display: flex;
+	flex-grow: 1;
+	height: 30px;
 }
 
 #editor {
-  height: calc(100vh - 95px);
-  margin: 0px 30px;
-  margin-bottom: 15px;
-  background-color: beige;
+	height: calc(100vh - 95px);
+	margin: 0 30px 15px;
+	background-color: beige;
 }
 
 div[role="toolbar"] {
-  margin: 0px 20px;
-  background-color: linear-gradient(to right, #f5f5dc, #a9a9a9);
+	margin: 0 20px;
+	background-color: linear-gradient(to right, #f5f5dc, #a9a9a9);
 }
 
 .ql-snow .ql-picker.ql-expanded .ql-picker-label {
-  color: beige;
+	color: beige;
 }
 
 .tooltip {
-  display: none;
+	display: none;
 }
 
 .tooltip.active {
-  position: relative;
-  z-index: 1000;
-  display: block;
-  color: black;
-  font-size: small;
+	position: relative;
+	z-index: 1000;
+	display: block;
+	color: black;
+	font-size: small;
 }
 
 header {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-content: flex-start;
-  align-items: center;
-  padding: 2px 10px;
-  gap: 15px;
-  background-color: darkgray;
-  color: white;
-  min-height: 35px;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-content: flex-start;
+	align-items: center;
+	padding: 2px 10px;
+	gap: 15px;
+	background-color: darkgray;
+	color: white;
+	min-height: 35px;
+	position: sticky;
+	top: 0;
+	z-index: 1000;
 }
 
 .titlebar {
-  padding: 5px 4px;
-  border-radius: 5px;
-  font-weight: 500;
-  font-size: medium;
+	padding: 5px 4px;
+	border-radius: 5px;
+	font-weight: 500;
+	font-size: medium;
 }
 
 .menu-item > a {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  line-height: 1.5rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	line-height: 1.5rem;
 }
 
 .shortcut_key {
-  font-size: .7rem;
+	font-size: 0.7rem;
 }
 
 .ql-formats {
-  width: fit-content;
+	width: fit-content;
 }
 
 .ql-toolbar .ql-snow {
-  position: sticky;
-  z-index: 1000;
+	position: sticky;
+	z-index: 1000;
 }
 
-.ql-snow .ql-picker.ql-font  {
-  width: 140px;
+.ql-snow .ql-picker.ql-font {
+	width: 140px;
 }
 
 .ql-picker-label {
-  min-width: fit-content;
-  position: relative;
+	min-width: fit-content;
+	position: relative;
 }
 
 span.ql-picker-label > svg {
-  position: relative;
-  right: 0px;
+	position: relative;
+	right: 0;
 }
 
 #rtf-doc {
-  margin: 10px;
-  background-color: #887a7a;
+	margin: 10px;
+	background-color: #887a7a;
 }
 
 ul > li:hover {
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-  background-color: rgb(190, 190, 190);
-  cursor:default;
-} 
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+	background-color: rgb(190, 190, 190);
+	cursor: default;
+}
 
 /* Menu Bar options */
 /* Style for the main menu */
 .main-menu {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
 }
 
 /* Style for main menu items */
 .main-menu > li {
-  position: relative;
-  display: inline-block;
+	position: relative;
+	display: inline-block;
 }
 
 /* Style for submenu */
 .submenu {
-  display: none;
-  position: absolute;
-  left: 0;
-  top: 100%; /* This positions the submenu right below the main menu item */
-  list-style-type: none;
-  margin: 0px;
-  padding: 0px;
-  background-color: #a9a9a9;
-  overflow: hidden;
-  line-height: 1.5;
-  width: 150px;
-  color: white;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+	display: none;
+	position: absolute;
+	left: 0;
+	top: 100%; /* This positions the submenu right below the main menu item */
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	background-color: #a9a9a9;
+	overflow: hidden;
+	line-height: 1.5;
+	width: 150px;
+	color: white;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 
 /* Display submenu on hover */
 .main-menu > li:hover .submenu {
-  display: inline-block;
+	display: inline-block;
 }
 
 .submenu li a {
-  text-decoration: none;
-  color: white;
-  width: 100%;
-  height: 100%;
-  background-color: hsla(0, 0%, 15%, 0);
-  padding: 0px 10px;
-  border: 0px dashed grey;
-  text-align: left;
+	text-decoration: none;
+	color: white;
+	width: 100%;
+	height: 100%;
+	background-color: hsla(0, 0%, 15%, 0);
+	padding: 0 10px;
+	border: 0 dashed grey;
+	text-align: left;
 }
 
 /*------------------- fonts -------------------*/
 /* Set dropdown font-families */
- 
+
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='Times New Roman']::before,
-.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Times New Roman']::before
-{
-  content: 'Times New Roman';
-  font-family: 'Times New Roman';
-  width: fit-content;
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Times New Roman']::before {
+	content: 'Times New Roman';
+	font-family: 'Times New Roman';
+	width: fit-content;
 }
 
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='Roboto']::before,
-.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Roboto']::before
-{
-  content: 'Roboto';
-  font-family: 'Roboto';
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Roboto']::before {
+	content: 'Roboto';
+	font-family: 'Roboto';
 }
 
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='Poppins']::before,
-.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Poppins']::before
-{
-  content: 'Poppins';
-  font-family: 'Poppins';
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Poppins']::before {
+	content: 'Poppins';
+	font-family: 'Poppins';
 }
 
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='Montserrat']::before,
-.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Montserrat']::before
-{
-  content: 'Montserrat';
-  font-family: 'Montserrat';
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Montserrat']::before {
+	content: 'Montserrat';
+	font-family: 'Montserrat';
 }
 
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='Inconsolata']::before,
-.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Inconsolata']::before
-{
-  content: 'Inconsolata';
-  font-family: 'Inconsolata';
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Inconsolata']::before {
+	content: 'Inconsolata';
+	font-family: 'Inconsolata';
 }
 
 /* Set content font-families */
 .ql-font-Times-New-Roman {
-  font-family: 'Times New Roman', sans-serif;
+	font-family: 'Times New Roman', sans-serif;
 }
 
 .ql-font-Roboto {
-  font-family: 'Roboto', sans-serif;
+	font-family: 'Roboto', sans-serif;
 }
 
 .ql-font-Poppins {
-  font-family: 'Poppins', sans-serif;
+	font-family: 'Poppins', sans-serif;
 }
 
 .ql-font-Montserrat {
-  font-family: 'Montserrat', sans-serif;
+	font-family: 'Montserrat', sans-serif;
 }
 
 .ql-font-Inconsolata {
-  font-family: 'Inconsolata', monospace;
+	font-family: 'Inconsolata', monospace;
 }

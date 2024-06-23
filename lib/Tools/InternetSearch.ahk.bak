@@ -1,0 +1,67 @@
+#Include <Converters\Number>
+#Include <Tools\CleanInputBox>
+#Include <Extensions\String>
+#Include <App\Browser>
+
+class InternetSearch extends CleanInputBox {
+
+	__New(searchEngine) {
+		super.__New()
+		this.SelectedSearchEngine := this.AvailableSearchEngines[searchEngine]
+	}
+
+	static FeedQuery(input) {
+		restOfLink := this.SanitizeQuery(input)
+		Browser.RunLink(this.SelectedSearchEngine restOfLink)
+	}
+
+	static DynamicallyReselectEngine(input) {
+		for key, value in this.SearchEngineNicknames {
+			if input.RegExMatch("^" key " ") {
+				this.SelectedSearchEngine := value
+				input := input[3, -1]
+				break
+			}
+		}
+		return input
+	}
+
+	static TriggerSearch() {
+		if !input := super.WaitForInput() {
+			return false
+		}
+		query := this.DynamicallyReselectEngine(input)
+		this.FeedQuery(query)
+	}
+
+	static AvailableSearchEngines := Map(
+		"Google",  "https://www.google.com/search?q=",
+		"Youtube", "https://www.youtube.com/results?search_query=",
+		"Emoji",   "https://emojipedia.org/search/?q=",
+		"Yandex",  "https://yandex.ru/search/?text=",
+		"Movies",  "https://watchmovieshd.ru/search?keyword=",
+		"Phind",   "https://www.phind.com/search?q=",
+		"Crates",  "https://crates.io/search?q=",
+		; "Rust Docs", "https://doc.rust-lang.org/stable/std/path/struct.PathBuf.html?search=",
+	)
+
+	static SearchEngineNicknames := Map(
+		"g",  this.AvailableSearchEngines["Google"],
+		"y",  this.AvailableSearchEngines["Youtube"],
+		"e",  this.AvailableSearchEngines["Emoji"],
+		"ya", this.AvailableSearchEngines["Yandex"],
+		"m",  this.AvailableSearchEngines["Movies"],
+		"p",  this.AvailableSearchEngines["Phind"],
+		"c",  this.AvailableSearchEngines["Crates"],
+		; "r",  this.AvailableSearchEngines["Rust Docs"]
+	)
+
+	;Rename suggestion by @Micha-ohne-el, used to be ConvertToLink()
+	static SanitizeQuery(query) {
+		SpecialCharacters := '%$&+,/:;=?@ "<>#{}|\^~[]``'.Split()
+		for key, value in SpecialCharacters {
+			query := query.Replace(value, "%" NumberConverter.DecToHex(Ord(value), false))
+		}
+		return query
+	}
+}

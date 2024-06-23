@@ -1,122 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quartz</title>
     <!-- Include Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
-    <link href="https://fonts.cdnfonts.com/css/times-new-roman" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.cdnfonts.com/css/times-new-roman"
+      rel="stylesheet"
+    />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inconsolata&family=Montserrat&family=Poppins&family=Roboto&display=swap');
-        /* And other fonts */
+      @import url("https://fonts.googleapis.com/css2?family=Inconsolata&family=Montserrat&family=Poppins&family=Roboto&display=swap");
+      /* And other fonts */
     </style>
     <!-- Include Quill stylesheet -->
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css"
+      rel="stylesheet"
+    />
     <!-- Include highlight.js stylesheet for highlighting code syntax -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" rel="stylesheet">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+      rel="stylesheet"
+    />
     <!-- Include the highlight.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <!--AHK? https://github.com/highlightjs/highlight.js/blob/b9ae5fea90514b864f2c9b2889d7d3302d6156dc/src/languages/autohotkey.js#L15-->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <!-- Include the Quill library -->
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-</head> 
-<header>
-    <svg height="32px" version="1.1" viewBox="0 0 32 32" width="32px" xmlns="http://www.w3.org/2000/svg" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g fill="none" fill-rule="evenodd" id="rtf-doc" stroke="none" stroke-width="1"><g fill="#887a7a" id="icon-rtf"><path d="M21,26 L21,28.0025781 C21,29.1090746 20.1057238,30 19.0025781,30 L3.99742191,30 C2.89092539,30 2,29.1012878 2,27.9926701 L2,5.00732994 C2,3.89833832 2.8992496,3 4.0085302,3 L14,3 L14,9.00189865 C14,10.1132936 14.8980806,11 16.0059191,11 L21,11 L21,13 L12.0068483,13 C10.3462119,13 9,14.3422643 9,15.9987856 L9,23.0012144 C9,24.6573979 10.3359915,26 12.0068483,26 L21,26 L21,26 Z M15,3 L15,8.99707067 C15,9.55097324 15.4509752,10 15.990778,10 L21,10 L15,3 L15,3 Z M11.9945615,14 C10.8929956,14 10,14.9001762 10,15.992017 L10,23.007983 C10,24.1081436 10.9023438,25 11.9945615,25 L29.0054385,25 C30.1070044,25 31,24.0998238 31,23.007983 L31,15.992017 C31,14.8918564 30.0976562,14 29.0054385,14 L11.9945615,14 L11.9945615,14 Z M13.7999878,20 L13,20 L13,23 L12,23 L12,18 L12,16 L14.9951185,16 C16.1061002,16 17,16.8954305 17,18 C17,19.1106358 16.1050202,19.9973904 14.9999986,19.9999943 L17,23 L15.7999878,23 L13.7999878,20 L13.7999878,20 Z M13,17 L13,19 L15.0010434,19 C15.5527519,19 16,18.5561352 16,18 C16,17.4477153 15.5573397,17 15.0010434,17 L13,17 L13,17 Z M20,17 L20,23 L21,23 L21,17 L23,17 L23,16 L18,16 L18,17 L20,17 L20,17 Z M25,19 L25,17 L29,17 L29,16 L24,16 L24,23 L25,23 L25,20 L28,20 L28,19 L25,19 L25,19 Z" id="document-file-rtf"/></g></g></svg>
-        <h4 id="title">Quartz<emsp></emsp><emsp></emsp></h4>
-        <!-- Adding menu bar -->
-        <ul class="main-menu">
-            <li class="titlebar menu-file">
-                File
-                <ul class="submenu">
-                  <li class="menu-item"><a onclick="newFile()" ><span class="list-text">New...</span><span class="shortcut_key">Ctrl+N</span></a></li>
-                  <li class="menu-item"><a ><span class="list-text">Save…</span></a></li>
-                  <li class="menu-item"><a onclick="openFile()" ><span class="list-text">Open…</span><span class="shortcut_key">Ctrl+O</span></a></li>
-                  <li class="menu-item"><a onclick="saveFile()"><span class="list-text">Save As</span><span class="shortcut_key">Ctrl+S</span></a></li>
-                  <li class="menu-item"><a onclick="passText()"><span class="list-text">Share as Text</span><span class="shortcut_key">Ctrl+T</span></a></li>
-                  <li class="menu-item"><a onclick="passHTML()"><span class="list-text">Share as HTML</span><span class="shortcut_key">Ctrl+H</span></a></li>
-                  <li class="menu-item"><a onclick="about()"><span class="list-text">About</span></a></li>
-                  <li class="menu-item"><a onclick="exitApp()"><span class="list-text">Exit…</span><span class="shortcut_key">Ctrl+Q</span></a></li>
-                </ul>
-              </li>
-              <li class="titlebar  menu-edit">
-                Edit
-                <ul class="submenu">
-                    <li class="menu-item"><a><span class="list-text">Find</span></a></li>
-                    <li class="menu-item"><a><span class="list-text">Find next</span></a></li>
-                    <li class="menu-item"><a><span class="list-text">Find previous</span></a></li>
-                    <li class="menu-item"><a><span class="list-text">Replace</span></a></li>
-                    <li class="menu-item"><a><span class="list-text">Select all</span></a></li>
-                    <li class="menu-item"><a><span class="list-text">Copy</span></a></li>
-                    <li class="menu-item"><a><span class="list-text">Paste</span></a></li>
-                    <li class="menu-item"><a><span class="list-text">Go to</span></a></li>
-                    <li class="menu-item"><a><span class="list-text">Time/Date</span></a></li>
-                    <li class="menu-item"><a><span class="list-text">Font</span></a></li>
-                </ul>
-              </li>
-              <li class="titlebar menu-view">
-                View
-                <ul class="submenu">
-                    <li class="menu-item"><a><span class="list-text">Zoom</span></a></li>
-                    <li class="menu-item"><a><span class="list-text">Status bar</span></a></li>
-                    <li class="menu-item"><a><span class="list-text">Word wrap</span></a></li>
-                </ul>
-              </li>
-            <li class="titlebar menu-help">Help</li>
+  </head>
+  <header>
+    <svg
+      height="32px"
+      version="1.1"
+      viewBox="0 0 32 32"
+      width="32px"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+    >
+      <title />
+      <desc />
+      <defs />
+      <g
+        fill="none"
+        fill-rule="evenodd"
+        id="rtf-doc"
+        stroke="none"
+        stroke-width="1"
+      >
+        <g fill="#887a7a" id="icon-rtf">
+          <path
+            d="M21,26 L21,28.0025781 C21,29.1090746 20.1057238,30 19.0025781,30 L3.99742191,30 C2.89092539,30 2,29.1012878 2,27.9926701 L2,5.00732994 C2,3.89833832 2.8992496,3 4.0085302,3 L14,3 L14,9.00189865 C14,10.1132936 14.8980806,11 16.0059191,11 L21,11 L21,13 L12.0068483,13 C10.3462119,13 9,14.3422643 9,15.9987856 L9,23.0012144 C9,24.6573979 10.3359915,26 12.0068483,26 L21,26 L21,26 Z M15,3 L15,8.99707067 C15,9.55097324 15.4509752,10 15.990778,10 L21,10 L15,3 L15,3 Z M11.9945615,14 C10.8929956,14 10,14.9001762 10,15.992017 L10,23.007983 C10,24.1081436 10.9023438,25 11.9945615,25 L29.0054385,25 C30.1070044,25 31,24.0998238 31,23.007983 L31,15.992017 C31,14.8918564 30.0976562,14 29.0054385,14 L11.9945615,14 L11.9945615,14 Z M13.7999878,20 L13,20 L13,23 L12,23 L12,18 L12,16 L14.9951185,16 C16.1061002,16 17,16.8954305 17,18 C17,19.1106358 16.1050202,19.9973904 14.9999986,19.9999943 L17,23 L15.7999878,23 L13.7999878,20 L13.7999878,20 Z M13,17 L13,19 L15.0010434,19 C15.5527519,19 16,18.5561352 16,18 C16,17.4477153 15.5573397,17 15.0010434,17 L13,17 L13,17 Z M20,17 L20,23 L21,23 L21,17 L23,17 L23,16 L18,16 L18,17 L20,17 L20,17 Z M25,19 L25,17 L29,17 L29,16 L24,16 L24,23 L25,23 L25,20 L28,20 L28,19 L25,19 L25,19 Z"
+            id="document-file-rtf"
+          />
+        </g>
+      </g>
+    </svg>
+    <h4 id="title">Quartz<emsp></emsp><emsp></emsp></h4>
+    <!-- Adding menu bar -->
+    <ul class="main-menu">
+      <li class="titlebar menu-file">
+        File
+        <ul class="submenu">
+          <li class="menu-item">
+            <a onclick="newFile()"
+              ><span class="list-text">New...</span
+              ><span class="shortcut_key">Ctrl+N</span></a
+            >
+          </li>
+          <li class="menu-item">
+            <a><span class="list-text">Save…</span></a>
+          </li>
+          <li class="menu-item">
+            <a onclick="openFile()"
+              ><span class="list-text">Open…</span
+              ><span class="shortcut_key">Ctrl+O</span></a
+            >
+          </li>
+          <li class="menu-item">
+            <a onclick="saveFile()"
+              ><span class="list-text">Save As</span
+              ><span class="shortcut_key">Ctrl+S</span></a
+            >
+          </li>
+          <li class="menu-item">
+            <a onclick="passText()"
+              ><span class="list-text">Share as Text</span
+              ><span class="shortcut_key">Ctrl+T</span></a
+            >
+          </li>
+          <li class="menu-item">
+            <a onclick="passHTML()"
+              ><span class="list-text">Share as HTML</span
+              ><span class="shortcut_key">Ctrl+H</span></a
+            >
+          </li>
+          <li class="menu-item">
+            <a onclick="about()"><span class="list-text">About</span></a>
+          </li>
+          <li class="menu-item">
+            <a onclick="exitApp()"
+              ><span class="list-text">Exit…</span
+              ><span class="shortcut_key">Ctrl+Q</span></a
+            >
+          </li>
         </ul>
-        <div class="block-input">
-            
-        </div>
-</header>
-<body>
+      </li>
+      <li class="titlebar menu-edit">
+        Edit
+        <ul class="submenu">
+          <li class="menu-item">
+            <a><span class="list-text">Find</span></a>
+          </li>
+          <li class="menu-item">
+            <a><span class="list-text">Find next</span></a>
+          </li>
+          <li class="menu-item">
+            <a><span class="list-text">Find previous</span></a>
+          </li>
+          <li class="menu-item">
+            <a><span class="list-text">Replace</span></a>
+          </li>
+          <li class="menu-item">
+            <a><span class="list-text">Select all</span></a>
+          </li>
+          <li class="menu-item">
+            <a><span class="list-text">Copy</span></a>
+          </li>
+          <li class="menu-item">
+            <a><span class="list-text">Paste</span></a>
+          </li>
+          <li class="menu-item">
+            <a><span class="list-text">Go to</span></a>
+          </li>
+          <li class="menu-item">
+            <a><span class="list-text">Time/Date</span></a>
+          </li>
+          <li class="menu-item">
+            <a><span class="list-text">Font</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class="titlebar menu-view">
+        View
+        <ul class="submenu">
+          <li class="menu-item">
+            <a><span class="list-text">Zoom</span></a>
+          </li>
+          <li class="menu-item">
+            <a><span class="list-text">Status bar</span></a>
+          </li>
+          <li class="menu-item">
+            <a><span class="list-text">Word wrap</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class="titlebar menu-help">Help</li>
+    </ul>
+    <div class="block-input"></div>
+  </header>
+  <body>
     <!-- Create the Quill editor container -->
     <div class="main">
-        <div id="editor">
-
-        </div>
+      <div id="editor"></div>
     </div>
     <script>
-        const FontAttributor = Quill.import('formats/font');
-        FontAttributor.whitelist = [
-        'Times New Roman','Roboto','Poppins','Montserrat','Inconsolata'
-        ];
-        Quill.register(FontAttributor, true);
+      const FontAttributor = Quill.import("formats/font");
+      FontAttributor.whitelist = [
+        "Times New Roman",
+        "Roboto",
+        "Poppins",
+        "Montserrat",
+        "Inconsolata",
+      ];
+      Quill.register(FontAttributor, true);
 
-        const quill = new Quill('#editor', {
-            placeholder: 'Start typing here...',
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                [{ 'font': ['Times New Roman','Roboto','Poppins','Montserrat','Inconsolata']}],
-                ['bold', 'italic', 'underline', 'strike'],
-                ['blockquote', 'code-block'],
-                [{ header: [1, 2, 3, 4, false] }],
-                [{ list: 'ordered' }, { list: 'bullet' },], 
-                [{ indent: '-1' }, { indent: '+1' }, { 'align': [] }],
-                ['link', 'image', 'video'],
-                ['clean', { 'color': [] }, { 'background': [] }]
+      const quill = new Quill("#editor", {
+        placeholder: "Start typing here...",
+        theme: "snow",
+        modules: {
+          toolbar: [
+            [
+              {
+                font: [
+                  "Times New Roman",
+                  "Roboto",
+                  "Poppins",
+                  "Montserrat",
+                  "Inconsolata",
                 ],
-                syntax: true //Enable syntax highlighting
-            }
-        });
-        //Add Syntax highlighting with Javascript as default
-        const Delta = Quill.import('delta');
-        /* quill.setContents(
+              },
+            ],
+            ["bold", "italic", "underline", "strike"],
+            ["blockquote", "code-block"],
+            [{ header: [1, 2, 3, 4, false] }],
+            [{ list: "ordered" }, { list: "bullet" }],
+            [{ indent: "-1" }, { indent: "+1" }, { align: [] }],
+            ["link", "image", "video"],
+            ["clean", { color: [] }, { background: [] }],
+          ],
+          syntax: true, //Enable syntax highlighting
+        },
+      });
+      //Add Syntax highlighting with Javascript as default
+      const Delta = Quill.import("delta");
+      /* quill.setContents(
         new Delta()
             .insert('const language = "JavaScript";')
             .insert('\n', { 'code-block': 'javascript' })
             .insert('console.log("I love " + language + "!");')
             .insert('\n', { 'code-block': 'javascript' })
         ); */
-        window.onload = function() {
-            let obj = chrome.webview.hostObjects.ahk;
-        }
+      window.onload = function () {
+        let obj = chrome.webview.hostObjects.ahk;
+      };
     </script>
     <script src="script.js"></script>
     <!-- some cool quill addons -----------
     https://github.com/quilljs/awesome-quill
     https://github.com/T-vK/DynamicQuillTools
     ------------------------------------------>
-</body>
+  </body>
 </html>
