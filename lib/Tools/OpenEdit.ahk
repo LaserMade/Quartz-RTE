@@ -3,6 +3,7 @@
 #Include <Utils\GetFilesSortedByDate>
 #Include <Paths>
 #Include <App\VSCode>
+#Include <App\Explorer>
 
 ; ---------------------------------------------------------------------------
 ; @i: Open the folder containing the file, and (optional) edit the file in VS Code
