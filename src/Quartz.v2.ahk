@@ -16,7 +16,7 @@ The "Documents/AutoHotkey/lib" directory is a valid AHK library path that AutoHo
 */
 
 /**
-Now you can use the `Quartz` class like this:
+Now you can use the Quartz class like this:
 
 text := "This is the text"
 editor := Quartz(text)
@@ -32,7 +32,6 @@ editor.OpenFile()
 
 ; To save the current content
 editor.SaveFile(editor.GetText())
-```
 
 This class encapsulates the functionality of the rich text editor and provides methods to manipulate the text. The GUI is created when you instantiate the class, and you can interact with it using the provided methods.
 
@@ -40,28 +39,27 @@ Key changes and considerations:
 
 1. The class is initialized with an optional text parameter.
 2. Most of the original functions are now methods of the class.
-3. The GUI setup is done in the constructor (`__New` method).
+3. The GUI setup is done in the constructor (__New method).
 4. The WebView2 functionality is retained, allowing for rich text editing.
 5. File operations (open and save) are included as methods.
 6. The class maintains internal `text` and `html` properties that can be accessed and modified.
 
 Note that this class requires the WebView2 library and assumes that the necessary HTML, CSS, and JS files are present in the correct locations. You may need to adjust file paths and ensure all dependencies are correctly set up for this to work in your environment.
 
-Would you like me to explain any part of this implementation in more detail?
 */
-; Global Version := "0.4"
-; Global Title := A_ScriptName
-; Global CodeName := "Alpha " SubStr(Version, 3, 1)
-; Global Description := "Rich Text Editor using AHK and JS/HTML/CSS"
-; Global RootDir := StrReplace(A_ScriptDir, "\src", "")
-; Global path := {}
-; ; path.src := A_RootDir '/src/'
-; Global path.src := RootDir '\src'
-; Global path.html := path.src '\index.html'
-; Global path.css := path.src '\style.css'
-; Global path.js := path.src '\script.js'
-; Global path.splash := path.src '\splash.mp4'
-; Global path.settings := path.src '\settings.ini'
+Global Version := "0.4"
+Global Title := A_ScriptName
+Global CodeName := "Alpha " SubStr(Version, 3, 1)
+Global Description := "Rich Text Editor using AHK and JS/HTML/CSS"
+Global A_RootDir := StrReplace(A_ScriptDir, "\src", "")
+Global path := {}
+; path.src := A_RootDir '/src/'
+path.src := A_RootDir '\src'
+path.html := path.src '\index.html'
+path.css := path.src '\style.css'
+path.js := path.src '\script.js'
+path.splash := path.src '\splash.mp4'
+path.settings := path.src '\settings.ini'
 
 ; TraySetIcon("shell32.dll", "166")
 
