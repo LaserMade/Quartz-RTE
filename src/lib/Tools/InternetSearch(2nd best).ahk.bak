@@ -1,0 +1,91 @@
+#Include <Converters\Number>
+#Include <Tools\CleanInputBox>
+#Include <Extensions\String>
+#Include <App\Browser>
+
+
+class InternetSearch extends CleanInputBox {
+
+	__New(searchEngine) {
+		super.__New()
+		this.SelectedSearchEngine := this.AvailableSearchEngines[searchEngine]
+	}
+
+	static FeedQuery(input) {
+		restOfLink := this.SanitizeQuery(input)
+		Browser.RunLink(this.SelectedSearchEngine restOfLink)
+	}
+
+	static DynamicallyReselectEngine(input) {
+		for key, value in this.SearchEngineNicknames {
+			infos(
+				'key: ' key
+				'`n'
+				'value: ' value	
+			)
+			test := input.RegExMatch("^" key " ")
+			; if input.RegExMatch("^" key " ") {
+			; 	this.SelectedSearchEngine := value
+			; 	input := input[3, -1]
+			; 	break
+			; } else {
+			; 	Infos("not valid")
+			; 	break
+			; }
+			; if !test {
+			; 	Infos("invalid")
+			; 	return
+			; } else {
+			; 	this.SelectedSearchEngine := value
+			; 	input := input[3, -1]
+			; 	return input
+			; }
+			; if input.RegExMatch("^" key " ") {
+			; 	this.SelectedSearchEngine := value
+			; 	input := input[3, -1]
+			; 	break
+			; } else {
+			; 	Infos("not valid")
+			; 	break
+			; }
+		}
+		return
+		; return input
+	}
+
+	static TriggerSearch(input) {
+		query := this.DynamicallyReselectEngine(input)
+		this.FeedQuery(query)
+	}
+
+	static AvailableSearchEngines := Map(
+		"Google",  "https://www.google.com/search?q=",
+		"Youtube", "https://www.youtube.com/results?search_query=",
+		"DuckDuckGo",  "https://duckduckgo.com/?q=",
+		"Bing-FMGlobal",  "https://www.bing.com/work/search?q=",
+		"Wikipedia",  "https://en.wikipedia.org/w/index.php?title=Special:Search&search=",
+		"AHK-V2-Docs",   "https://duckduckgo.com/?q=site:autohotkey.com/docs/v2/%20",
+		"AHK-Forums",  "https://duckduckgo.com/?q=site:autohotkey.com/boards%20",
+		; "Rust Docs", "https://doc.rust-lang.org/stable/std/path/struct.PathBuf.html?search=",
+	)
+
+	static SearchEngineNicknames := Map(
+		"g",  this.AvailableSearchEngines["Google"],
+		"y",  this.AvailableSearchEngines["Youtube"],
+		"d", this.AvailableSearchEngines["DuckDuckGo"],
+		"f", this.AvailableSearchEngines["Bing-FMGlobal"],
+		"w",  this.AvailableSearchEngines["Wikipedia"],
+		"d",  this.AvailableSearchEngines["AHK-V2-Docs"],
+		"a",  this.AvailableSearchEngines["AHK-Forums"],
+		; "r",  this.AvailableSearchEngines["Rust Docs"]
+	)
+
+	;Rename suggestion by @Micha-ohne-el, used to be ConvertToLink()
+	static SanitizeQuery(query) {
+		SpecialCharacters := '%$&+,/:;=?@ "<>#{}|\^~[]``'.Split()
+		for key, value in SpecialCharacters {
+			query := query.Replace(value, "%" NumberConverter.DecToHex(Ord(value), false))
+		}
+		return query
+	}
+}

@@ -9,8 +9,8 @@
 
 #SingleInstance Force
 #Requires AutoHotkey v2.0+
-#Include <WebView2>
-#Include <javascript_strings>
+#Include <WebView2\WebView2>
+#Include <Extensions\javascript_strings>
 /*You must have WebView2.ahk, Comvar.ahk, and WebView2.dll in the proper directories.
 For instance, my WebView2.ahk file is located at: My Documents\AutoHotkey\lib\WebView2.ahk
 The "Documents/AutoHotkey/lib" directory is a valid AHK library path that AutoHotkey.exe looks in when including files with <brackets>
@@ -38,7 +38,7 @@ RTE.Show("w915 h445")
 WV2 := WebView2.create(RTE.Hwnd)
 HTML := WV2.CoreWebView2
 HTML.Navigate('file:///' path.html)
-HTML.AddHostObjectToScript('ahk', { about: about, OpenFile: OpenFile, SaveFile: SaveFile, get: getText, getHTML: getHTML, exit: Exit })
+HTML.AddHostObjectToScript('ahk', { about: about, OpenFile: OpenFile, SaveFile: SaveFile, get: getText, getHTML: qgetHTML, exit: Exit })
 RTE.OnEvent('Close', (*) => {function: (
     HTML := WV2 := 0
     RTE.Destroy()
@@ -84,9 +84,9 @@ OpenFile() {
         ClipWait
         Sleep 300                           ;wait for the copy to finish, alternatively use ClipWait?
         WinActivate(RTE.Hwnd)
-        Eval('quill.focus()')
+        qEval('quill.focus()')
         SendMode("Input")                   ;Edge (and by extension, WebView2) only support Input mode
-        Send('{ctrl down}{v}{ctrl up}{ctrl down}{home}{ctrl up}')   ;paste the contents of the clipboard and go to the top
+        Send('{ctrl down}v{ctrl up}{ctrl down}{home}{ctrl up}')   ;paste the contents of the clipboard and go to the top
         Sleep 500
         A_Clipboard := tempClip
         Sleep 300
@@ -100,7 +100,7 @@ OpenFile() {
         script := script '{insert: "' line '\n"},'
     }
     script := script '{insert: "\n"}]);'                ;new lines must be added at the end of a delta
-    Eval(script)
+    qEval(script)
 }
 
 SaveFile(content){
@@ -119,12 +119,12 @@ getText(str) {
     MsgBox(str)
 }
 
-getHTML(HtmlStr) {
+qgetHTML(HtmlStr) {
     MsgBox(HtmlStr)
 }
 
 setText(str) {
-    Eval('quill.setText("' str '")')
+    qEval('quill.setText("' str '")')
 }
 
 about() {
@@ -136,7 +136,7 @@ about() {
         script := script '{insert: "' line '\n"},'
     }
     script := script '{insert: "\n"}]);'
-    Eval(script)
+    qEval(script)
 }
 
 Exit() {
@@ -229,7 +229,7 @@ gui_pos(gui, x_mod?, y_mod?, w_mod?, h_mod?) {
     return gui_pos
 }
 
-Eval(script) {
+qEval(script) {
     handlerObj := WebView2.Handler(ExecuteScriptCompletedHandler)
     HTML.ExecuteScript(script, handlerObj)
     ExecuteScriptCompletedHandler(handler, errorCode, resultObjectAsJson) {
@@ -279,15 +279,15 @@ Settings() {
 #HotIf WinActive(RTE.Hwnd)
 
 ^n:: {
-    Eval('newFile();')
+    qEval('newFile();')
 }
 
 ^o::{
-    Eval('openFile();')
+    qEval('openFile();')
 }
 
 ^s:: {
-    Eval('saveFile();') 
+    qEval('saveFile();') 
 }
 
 #HotIf
