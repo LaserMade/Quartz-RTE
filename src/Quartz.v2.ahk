@@ -101,28 +101,42 @@ class Quartz {
     __New(text := "") {
         this.text := text
 		TraySetIcon("shell32.dll", "166")
-		this.Version := "0.4"
-		this.Title := A_ScriptName
-		this.CodeName := "Alpha " SubStr(this.Version, 3, 1)
-		this.Description := "Rich Text Editor using AHK and JS/HTML/CSS"
-		this.A_RootDir := StrReplace(A_ScriptDir, "\src", "")
-		this.path := {}
-		; path.src := A_RootDir '/src/'
-		this.path.src := this.A_RootDir '\src\'
-		this.path.html := this.path.src 'index.html'
-		this.path.css := this.path.src 'style.css'
-		this.path.js := this.path.src 'script.js'
-		this.path.splash := this.path.src 'splash.mp4'
-		this.path.settings := this.path.src 'settings.ini'
+
         this.SetupGUI()
     }
+    ; this.Version := "0.4"
+    ; this.Title := A_ScriptName
+    ; this.CodeName := "Alpha " SubStr(this.Version, 3, 1)
+    ; this.Description := "Rich Text Editor using AHK and JS/HTML/CSS"
+    ; this.A_RootDir := StrReplace(A_ScriptDir, "\src", "")
+    ; this.path := {}
+    ; ; path.src := A_RootDir '/src/'
+    ; this.path.src := this.A_RootDir '\src\'
+    ; this.path.html := this.path.src 'index.html'
+    ; this.path.css := this.path.src 'style.css'
+    ; this.path.js := this.path.src 'script.js'
+    ; this.path.splash := this.path.src 'splash.mp4'
+    ; this.path.settings := this.path.src 'settings.ini'
+    ; ---------------------------------------------------------------------------
+    Version := "0.4"
+    Title := A_ScriptName
+    CodeName := "Alpha " SubStr(Version, 3, 1)
+    Description := "Rich Text Editor using AHK and JS/HTML/CSS"
+    A_RootDir := StrReplace(A_ScriptDir, "\src", "")
+    path := {}
+    ; path.src := A_RootDir '/src/'
+    path.src      := A_RootDir '\src\'
+    path.html     := this.path.src 'index.html'
+    path.css      := this.path.src 'style.css'
+    path.js       := this.path.src 'script.js'
+    path.splash   := this.path.src 'splash.mp4'
+    path.settings := this.path.src 'settings.ini'
+    ; ---------------------------------------------------------------------------
 
     SetupGUI() {
-
-
         this.RTE := Gui()
         this.RTE.Opt(" +Border +Resize")
-        this.RTE.Title := "Quartz"
+        this.RTE.Title := 'Quartz - A Rich Text Editor'
         this.RTE.BackColor := "Black"
         this.RTE.Show("w915 h445")
         
@@ -156,8 +170,9 @@ class Quartz {
     }
 
     GetHTML(HtmlStr := "") {
-        if (HtmlStr != "")
+        if (HtmlStr != ""){
             this.html := HtmlStr
+        }
         return this.html
     }
 
@@ -167,8 +182,6 @@ class Quartz {
         } else {
             selected := savedfile
         }
-
-        if (selected = "" || !FileExist(selected)) {
 
         if (selected = "" || !FileExist(selected)) {
             return
@@ -184,46 +197,24 @@ class Quartz {
     }
 
     OpenRTF(file) {
-        try {
-            doc := ComObject("Word.Document")
-            doc.Open(file)
-            
-            AE.cBakClr(&cBak)
-
-        this.selected := selected
-
-        if (InStr(selected, ".rtf")) {
-            this.OpenRTF(selected)
+        if (InStr(file, ".rtf")) {
+            this.OpenRTF(file)
         } else {
-            this.OpenTextFile(selected)
+            this.OpenTextFile(file)
         }
-    }
-
-    OpenRTF(file) {
         try {
             doc := ComObject("Word.Document")
             doc.Open(file)
-            
             AE.cBakClr(&cBak)
             AE.SM(&sm)
-            
-            
             doc.content.formattedText.copy()
-            AE.cSleep()
-            
-            WinActivate(this.RTE.Hwnd)
-            
+            AE.cSleep()   
             WinActivate(this.RTE.Hwnd)
             this.Eval('quill.focus()')
-            
-            Send("{Ctrl Down}v{Ctrl Up}")
-            
-            
-            Send("{Ctrl Down}v{Ctrl Up}")
-            
+            ; Send("{Ctrl Down}v{Ctrl Up}")
+            Send(key.paste)
             AE.rSM(sm)
             AE.cRestore(cBak)
-            
             doc.Close()
         } catch as err {
             MsgBox("Error opening RTF file: " err.Message)
@@ -251,13 +242,14 @@ class Quartz {
 
     SaveFile(content) {
         selected := FileSelect('S',, 'Select a file to save', this.filetypes)
-        if (selected = "")
+        if (selected = ""){
             return
+        }
         if FileExist(selected) {
             overwrite := MsgBox("File already exists, overwrite?", "Overwrite", "YesNo")
-            if (overwrite != "Yes")
-            if (overwrite != "Yes")
+            if (overwrite != "Yes"){
                 return
+            }
         }
         FileAppend(content, selected)
     }
@@ -273,8 +265,9 @@ class Quartz {
     }
 
     GuiSize(GuiObj, MinMax, Width, Height) {
-        if (MinMax = -1)
+        if (MinMax = -1){
             return
+        }
         this.RTE.GetPos(, , &w, &h)
         this.HTML.height := h
         this.HTML.width := w
