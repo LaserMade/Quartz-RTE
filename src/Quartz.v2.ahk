@@ -47,19 +47,19 @@ Key changes and considerations:
 Note that this class requires the WebView2 library and assumes that the necessary HTML, CSS, and JS files are present in the correct locations. You may need to adjust file paths and ensure all dependencies are correctly set up for this to work in your environment.
 
 */
-Global Version := "0.4"
-Global Title := A_ScriptName
-Global CodeName := "Alpha " SubStr(Version, 3, 1)
-Global Description := "Rich Text Editor using AHK and JS/HTML/CSS"
-Global A_RootDir := StrReplace(A_ScriptDir, "\src", "")
-Global path := {}
-; path.src := A_RootDir '/src/'
-path.src := A_RootDir '\src'
-path.html := path.src '\index.html'
-path.css := path.src '\style.css'
-path.js := path.src '\script.js'
-path.splash := path.src '\splash.mp4'
-path.settings := path.src '\settings.ini'
+; Global Version := "0.4"
+; Global Title := A_ScriptName
+; Global CodeName := "Alpha " SubStr(Version, 3, 1)
+; Global Description := "Rich Text Editor using AHK and JS/HTML/CSS"
+; Global A_RootDir := StrReplace(A_ScriptDir, "\src", "")
+; Global path := {}
+; ; path.src := A_RootDir '/src/'
+; path.src := A_RootDir '\src'
+; path.html := path.src '\index.html'
+; path.css := path.src '\style.css'
+; path.js := path.src '\script.js'
+; path.splash := path.src '\splash.mp4'
+; path.settings := path.src '\settings.ini'
 
 ; TraySetIcon("shell32.dll", "166")
 
@@ -101,7 +101,6 @@ class Quartz {
     __New(text := "") {
         this.text := text
 		TraySetIcon("shell32.dll", "166")
-
         this.SetupGUI()
     }
     ; this.Version := "0.4"
@@ -120,12 +119,12 @@ class Quartz {
     ; ---------------------------------------------------------------------------
     Version := "0.4"
     Title := A_ScriptName
-    CodeName := "Alpha " SubStr(Version, 3, 1)
+    CodeName := "Alpha " SubStr(this.Version, 3, 1)
     Description := "Rich Text Editor using AHK and JS/HTML/CSS"
     A_RootDir := StrReplace(A_ScriptDir, "\src", "")
     path := {}
     ; path.src := A_RootDir '/src/'
-    path.src      := A_RootDir '\src\'
+    path.src      := this.A_RootDir '\src\'
     path.html     := this.path.src 'index.html'
     path.css      := this.path.src 'style.css'
     path.js       := this.path.src 'script.js'
@@ -197,13 +196,13 @@ class Quartz {
     }
 
     OpenRTF(file) {
-        if (InStr(file, ".rtf")) {
-            this.OpenRTF(file)
-        } else {
-            this.OpenTextFile(file)
-        }
+        ; if (InStr(file, ".rtf")) {
+        ;     this.OpenRTF(file)
+        ; } else {
+        ;     this.OpenTextFile(file)
+        ; }
         try {
-            doc := ComObject("Word.Document")
+            doc := ComObjGet(file)
             doc.Open(file)
             AE.cBakClr(&cBak)
             AE.SM(&sm)
@@ -213,7 +212,7 @@ class Quartz {
             this.Eval('quill.focus()')
             ; Send("{Ctrl Down}v{Ctrl Up}")
             Send(key.paste)
-            AE.rSM(sm)
+            ; AE.rSM(sm)
             AE.cRestore(cBak)
             doc.Close()
         } catch as err {

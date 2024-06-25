@@ -86,7 +86,7 @@ OpenFile() {
         WinActivate(RTE.Hwnd)
         qEval('quill.focus()')
         SendMode("Input")                   ;Edge (and by extension, WebView2) only support Input mode
-        Send('{ctrl down}{v}{ctrl up}{ctrl down}{home}{ctrl up}')   ;paste the contents of the clipboard and go to the top
+        Send('{ctrl down}v{ctrl up}{ctrl down}{home}{ctrl up}')   ;paste the contents of the clipboard and go to the top
         Sleep 500
         A_Clipboard := tempClip
         Sleep 300

@@ -3,7 +3,8 @@
 #Include <Tools\Info>
 #Include <Includes\Includes_Extensions>
 ; #Include <Extensions\Array>
-#Include <..\AHK.Projects.v2\PDF2txt.ahk-v2\PDF2TXT>
+; #Include <..\AHK.Projects.v2\PDF2txt.ahk-v2\PDF2TXT>
+; #Include <..\..\AHK.Projects.v2\PDF2txt.ahk-v2\PDF2TXT>
 ; ---------------------------------------------------------------------------
 ; @region...: explorerGetPath()
 ; ---------------------------------------------------------------------------
@@ -73,28 +74,28 @@ fileString(&str?){
 		}
 	}
 }
-^+p::{
-	; sel := []
-    text := ''
-	sel := ''
-	sel := getSelected()
-    Infos(sel)
-    ; return
-    text := PDF2TXT(sel)
-	; len := sel.length
-	; if len == 1 {
-	; 	sel := sel.ToString()
-    ;     text := PDF2TXT(sel)
-	; 	; Run(Paths.Code ' "' sel '"')
-	; }
-	; else {
-	; 	for each, value in sel {
-	; 		; Run(Paths.Code ' "' value '"')
-    ;         text := PDF2TXT(value)
-	; 	}
-	; }
-    MsgBox(text)
-}
+; ^+p::{
+; 	; sel := []
+;     text := ''
+; 	sel := ''
+; 	sel := getSelected()
+;     Infos(sel)
+;     ; return
+;     text := PDF2TXT(sel)
+; 	; len := sel.length
+; 	; if len == 1 {
+; 	; 	sel := sel.ToString()
+;     ;     text := PDF2TXT(sel)
+; 	; 	; Run(Paths.Code ' "' sel '"')
+; 	; }
+; 	; else {
+; 	; 	for each, value in sel {
+; 	; 		; Run(Paths.Code ' "' value '"')
+;     ;         text := PDF2TXT(value)
+; 	; 	}
+; 	; }
+;     MsgBox(text)
+; }
 #HotIf
 ; ---------------------------------------------------------------------------
 ; @description..: Get the paths of selected files and folders both in Explorer and on the Desktop
