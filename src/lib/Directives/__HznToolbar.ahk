@@ -1,5 +1,6 @@
 ﻿#Requires AutoHotkey v2+
 #Include <Directives\__AE.v2>
+#Include <..\Quartz-RTE\src\Quartz.v2>
 ; --------------------------------------------------------------------------------
 /************************************************************************
 * Function ..: __HznNew()
@@ -20,7 +21,7 @@
 *          - "pane" vs "toolbar" | "pane" vs "button" |etc
 *      - not all are needed, or obtainable every time.
 ; ***********************************************************************/
-#HotIf WinActive('ahk_exe hznHorizon.exe')
+#HotIf WinActive(Horizon.exe)
 Class HznToolbar {
     static _fCtl(&fCtl?) 	=> fCtl := ControlGetFocus('A')
     static _cCtl() 			=> cCtl := ControlGetClassNN(this._fCtl())
@@ -95,7 +96,7 @@ Class HznButton {
         AE.SM(&sm)
         Suspend(0)
         Static  WM_COMMAND := 273
-        hTb := HznToolbar._hTb()
+        hTb := hzn.Tb
         ; ---------------------------------------------------------------------------
         ; function: !!! ===> Programatically "Click" the button!!! <=== !!!
         Msg := WM_COMMAND, wParam_hi := 0, wParam_lo := idCommand, lParam := control := hTb
@@ -287,11 +288,15 @@ Class i extends hznHorizon {
 Class hznHorizon {
 	Class Save extends hznHorizon {
 		static RiskFile(){
-			AE.SM(&sm), AE.DH(0), this.Focus(&fCtl), Send(key.save)
+			AE.SM(&sm), AE.DH(0), this.Focus(&fCtl)
+			Send(key.save)
 			AE.cSleep(100), AE.DH(1), AE.rSM(sm)
-			try ControlFocus('TX')
+			; try ControlFocus('TX')
 			try ControlFocus(fCtl)
 		}
+		static lSave => (*) => ControlClick('Save', 'A')
+		static cSAVE => (*) => ControlClick('SAVE', 'A')
+		static SaveButton => (*) => this._Button()
 		static _Button(){
 			try ControlClick('Save', 'A')
 			try ControlClick('SAVE', 'A')
@@ -481,7 +486,12 @@ Class hznHorizon {
 	static _sub(sub := 'Subscript') 	=> (this.b(i.Subscript),	WinWaitActive('Font Attributes'), ControlClick(sub, 'A'), ControlClick('OK', 'A'))
 	; ---------------------------------------------------------------------------
     static Focus(&fCtl?){
-        fCtl := ControlGetFocus('A')
+        try{
+			fCtl := ControlGetFocus('A')
+		}
+		catch {
+			fCtl := WinActive('A')
+		}
         hWndMainWindow := WinGetTitle(DllCall( "GetAncestor", 'uint', fCtl, 'uint',GA_ROOTOWNER := 2 ))
         WinActivate(hWndMainWindow)
         hWnd := WinActive('A')
@@ -496,9 +506,9 @@ Class hznHorizon {
 		SplitArr := b := a := []
 		key_hotkey_sc := km := c := k := v := key_VK := key_SC := key_name := key_mod := key := ''
 		; static fCtl
-		fCtl := 0
+		hWndMainWindow := fCtl := 0
 		; n := needle := 'im)(sc[\w\d]+)'
-		n  := '^([~*$]{1})'
+		n  := '^([`~`*`$]{1})'
 		n1 := '([!^+#<>]+)'
 		n2 := '(sc[\w\d]{2})$'
 		n3 := 'im)' n n1 n2
@@ -527,15 +537,15 @@ Class hznHorizon {
 			b := m[1].Split()
 			for each, value in b {
 				switch {
-					case (value = '!'): key.k.alt
-					case (value = '+'): key.k := 'Shift'
+					case (value = '!'): k := 'Alt'
+					case (value = '+'): k := 'Shift'
 					case (value = '^'): k := 'Ctrl'
 					case (value = '#'): k := 'Win'
 					case (value = '<'): km := 'L'
 					case (value = '>'): km := 'R'
 				}
 			}
-			; key_mod := km k
+			key_mod := km k
 			key_mod := AE.SC_Convert(key_mod)
 		}
 
@@ -569,44 +579,29 @@ Class hznHorizon {
 		; @i...: Activate the Horizon Main Window
 		; ---------------------------------------------------------------------------
 		fCtl := ControlGetFocus('A')
-		; static c := HznActivate(fCtl)
 		AE.DH(0)
-		; Peep(c)
-		; idWin := WinGetID('ahk_exe hznHorizon.exe')
-		; ; infos('`n' c.fCtl '`n' fCtl)
-		; WinActivate(idWin)
-		; ; WinActivate(idWin)
-		; WinActivate(c.rCtl)
-		if !hMainWindow{
-			try hWndMainWindow := WinGetTitle(DllCall( "GetAncestor", 'uint', fCtl, 'uint',GA_ROOTOWNER := 2 ))
-			WinActivate(hWndMainWindow)
-		}
-		else {
-			WinActivate(hMainWindow)
-		}
-		; hWndMainWindow := WinGetTitle(DllCall( "GetAncestor", 'uint', fCtl, 'uint',GA_ROOTOWNER := 3 ))
+		this.ActiveWin(&hWndMainWindow)
+		WinActivate(hWndMainWindow)
 		hWnd := WinActive('A')
-		; hWnd := WinActive(idWin)
 		GetKeyState(k) ? Send('{' k ' Up}') : 0
 		KeyWait(k, 'U')
 		Send('{' k ' Down}' '{' key_SC '}' '{' k ' Up}')
 		KeyWait(key_mod, 'U')
-		if input ~= 's' || input ~= 'sc1F' {
-	
+		if input ~= '^s' || input ~= '^sc1F' {
+			this.Save.RiskFile()
 		}
 		AE.DH(1)
-		try ControlFocus('TX', hWnd)
-		try ControlFocus(fCtl, hWnd)
-		AE.BISL(0)
-		AE.rSM(sm)
+		; ControlGetClassNN(fCtl) ~= 'TX' ? ControlFocus('TX', hWnd) : ControlGetClassNN(fCtl) ~= 'Text' ? ControlFocus(fCtl, hWnd) : 0
+		AE.rSM_BISL(sm)
 	}
 	
     static ActiveWin(&hWndMainWindow?){
-        try ControlFocus('TX')
-        try ControlFocus('Text')
         try fCtl := ControlGetFocus('A')
-        try hWndMainWindow := WinGetTitle(DllCall( "GetAncestor", 'uint', fCtl, 'uint',GA_ROOTOWNER := 2 ))
-        return {WinT:hWndMainWindow}
+        ; try fCtl := ControlGetFocus(Horizon.exeTitle)
+		try ClassNN := ControlGetClassNN(fCtl)
+		AE.cSleep(100)
+        hWndMainWindow := WinGetTitle(DllCall( "GetAncestor", 'uint', fCtl, 'uint',GA_ROOTOWNER := 2 ))
+        return hWndMainWindow
     }
 
 	static _Enter(){
@@ -689,6 +684,7 @@ Class hznHorizon {
 		Static Msg := WM_PASTE := 770, wParam := 0, lParam := 0
 		hCtl := ControlGetFocus('A')
 		DllCall('SendMessage', 'Ptr', hCtl, 'UInt', Msg, 'UInt', wParam, 'UIntP', lParam)
+		Infos('I special pasted', 3000)
 	}
 	; ---------------------------------------------------------------------------
 	static EM_SETSEL := 177
@@ -1038,163 +1034,36 @@ Class hznHorizon {
 		t := A_Clipboard
 		AE.cSleep(100)
 
-		AE.rSM(sm)
-		; MsgBox('The text has been copied to the clipboard.`nYou can paste it by Right Click and select paste, or the shortcut/hotkey ctrl & v.`nHere is what is on the clipboard:`n' t)
-		; MsgBox('The text has been copied to the clipboard.`nYou can paste it by Right Click and select paste, or the shortcut/hotkey ctrl & v.')
 		Infos('The text has been copied to the clipboard.`nYou can paste it by Right Click and select paste, or the shortcut/hotkey ctrl & v.', 10000)
-		; A_Clipboard := cBak
-		/*
-		g := Gui('+DPIScale +ToolWindow +Resize','Basic Horizon Text Editor' )
-		g.AddText('Center', 'Edit your text, copy, and paste back into Horizon.')
-		g.AddText('Center', 'If it has formatting (bold, italics, underline), it will be lost.')
-		g.AddEdit('vText s11 TimesNewRoman +Wrap +Multi w' (A_ScreenWidth / 3) ' h' (A_ScreenHeight / 2), t )
-		g.Show('AutoSize NA')
-		AE.BISL(0)
-		; return
-		*/
-		/*
-		cBak := _AE_BU_Clr_Clip()
-		AE.BISL(1)
 
-		rect := Map()
-		hRect := []
-		fname := ''
-		hHzn := ''
-		ftext := ''
-		ftextName := ''
-		; static hCtl := ControlGetFocus('A')
-		hCtl := ControlGetFocus('A')
-		hParent := DllCall("user32\GetAncestor", "Ptr", hCtl, "UInt", 1, "Ptr") ;GA_PARENT := 1
-		hRoot := DllCall("user32\GetAncestor", "Ptr", hCtl, "UInt", 2, "Ptr") ;GA_ROOT := 2
-		hOwner := DllCall("user32\GetWindow", "Ptr", hCtl, "UInt", 4, "Ptr") ;GW_OWNER = 4
-		hChild := DllCall("RealChildWindowFromPoint", "Ptr", hCtl, "UInt", 4, "Ptr") ;GW_OWNER = 4
-		nCtl := ControlGetClassNN(hCtl)
-		hCtl_title := WinGetTitle(hRoot)
-		tName := hCtl_title
-		tIdx := hCtl_title
-		tWO := hCtl_title
-		tWinL := hCtl_title
-		needle := '^([\w\s]+\b)[\s-]+([\d\s]+\b)[\s-]+([\d\-\d]+)\s+\d+\s+[\w, -]+ \[([\w]+)\]$'
-		tName := RegExReplace(tName, needle, '$1')
-		tIdx := RegExReplace(tIdx, needle, '$2')
-		tWO := RegExReplace(tWO, needle, '$3')
-		tWinL := RegExReplace(tWinL, needle, '$4')
-		hHzn := WinExist('ahk_exe hznHorizon.exe')
-		
-
-		fPath := A_MyDocuments '\RichEdit\' tName '(' tIDx ')\' tWinL
-		fName := '_' nCtl '_' A_Now '.rtf'
-		fPathName := fPath '\' fname
-		; MsgBox(fPathName)
-		; return
-		if !DirExist(fPath) {
-			DirCreate(fPath)
-		}
-		if !FileExist(fName) {
-			; WriteFile(fPathName, '')
-			FileAppend('', fName)
-		} else {
-			FileDelete(fName)
-			FileAppend(A_Clipboard, fName)
-		}
-		try receiver.rMap.Set('fName', fName)
-		LineCount := 0
-		loop read fName {
-			LineCount := A_Index
-		}
-		nLineCount := LineCount
-		try DPI.ControlGetPos(&x, &y, &w, &h, nCtl, 'A')
-		; mRect := WindowGetRect(hCtl)
-		; width := mRect.width
-		; height := mRect.height
-		width := w
-		height := LineCount * 16
-		rect.Set('width',width, 'height',height, 'x', x, 'y', y, 'hCtl', hCtl, 'nCtl', nCtl, 'fName', fName)
-		; RTE_Title := 'hznRTE - A Rich Text Editor for Horizon'
-		RTE_Title := 'Horizon Rich Text Editor - hznRTE -- A Rich Text Editor for Horizon'
-		file_name := '__receiver.ahk'
-		file_line := '', TX11 := '', match:='', aLine := ''
-		aTX11 := [], new_map := []
-		width_needle := 'i)width', height_needle := 'i)height',	x_needle := 'i)x', y_needle := 'i)y', hCtl_needle := 'i)hCtl', nCtl_needle := 'i)nCtl'
-		match_array := [width_needle, height_needle, x_needle, y_needle, hCtl_needle, nCtl_needle]
-		; ---------------------------------------------------------------------------
-		; HznSelectAll(hCtl)
-		; clip_it()
-		; ---------------------------------------------------------------------------
-		hzntx11 := FileOpen(file_name,'rw','UTF-8')
-		Sleep(300)
-		; ---------------------------------------------------------------------------
-		Update_Receiver_Rect_Map(file_name)
-		; ---------------------------------------------------------------------------
-		Update_Receiver_Rect_Map(file_name){
-			loop read file_name {
-				aTX11.Push(A_LoopReadLine)
-				file_line .= A_LoopReadLine . '`n'
-			}
-			; Sleep(500)
-			; ---------------------------------------------------------------------------
-			for each, aLine in aTX11 {
-				; ---------------------------------------------------------------------------
-				for each, match in match_array {
-					if ((aLine ~= match)) {
-						str_match := StrSplit(match,')','i ) "')
-						rMatch := str_match[2]
-						; Infos(rMatch)
-						rect_match := rect[rMatch]
-						; rect_match := dpiRect.%str_match[2]%
-						new_str := RegExReplace(aLine, ':= ([0-9].*)', ':= ' rect_match . ',' )
-						aLine := new_str
-						aTX11.RemoveAt(A_Index)
-						aTX11.InsertAt(A_Index, aLine)
-					}
-				}
-				; ---------------------------------------------------------------------------
-				; function: write each value in the array to @param TX11 (string variable)
-				TX11 .= aLine . '`n'
-				; ---------------------------------------------------------------------------
-			}
-			; Infos(file_line . '`n' . TX11)
-			; ---------------------------------------------------------------------------
-			; hzntx11 := FileOpen(file_name,'rw','UTF-8')
-			hzntx11.Write(TX11)
-			hzntx11 := ''
-		}
-		Send('^{sc1E}') ;! ^a
-		HznSelectAll(hCtl)
-		; AE_Set_Sel(0,-1, hCtl)
-		; sel := AE_GetSel(hCtl)
-		; AE_GetStats(hCtl)
-		; count := AE_GetTextLen(hCtl, hCtl)
-		; Infos(sel.S ' ' sel.E '`n' count)
-		Send('^{sc2E}') ;! ^c
-		sleep(30)
-		ftext := A_Clipboard
-		sleep(30)
-		ftextName := A_MyDocuments '\RichEdit\' A_Now '.rtf'
-		WriteFile(ftextName, ftext)
-		Sleep(30)
-		f := ''
-		f := FileOpen(ftextName,'rw', 'UTF-8')
-		Sleep(30)
-		f.Write(ftext)
-		Sleep(30)
-		f.Close()
-		Sleep(30)
-		fR := f.Read()
-		if A_IsCompiled {
-			; Run('RichEdit_Editor_v2.exe')
-			Run('RichEdit_Editor_v2.exe' ' /' '"' ftextName '"')
+		this.Focus(&fCtl)
+		ClientTitleInfo  := WinGetTitle(DllCall( "GetAncestor", 'uint', fCtl, 'uint',GA_ROOTOWNER := 2 ))
+		ControlTitleInfo := WinGetTitle(DllCall( "GetAncestor", 'uint', fCtl, 'uint',GA_ROOTOWNER := 3 ))
+		fileTitle := []
+		fileTitle := StrSplit(ClientTitleInfo, ' - ', ' - ', 1)
+		FileSavePath := A_MyDocuments '\' fileTitle[1] ' - ' ControlTitleInfo '-' A_Now '.rtf'
+		if !FileExist(FileSavePath) {
+			rtfdoc := FileOpen(FileSavePath,3)
+			rtfdoc.Write(t)
+			rtfdoc.Close()
 		}
 		else {
-			; Run(Paths.Lib '\RichEdit_Editor_v2.ahk')
-			; Run(Paths.Lib '\RichEdit_Editor_v2.ahk ' '"' ftextName '"')
-			Run(Paths.Lib '\RichEdit_Editor_v2.ahk ' ftextName)
-			; Run(Paths.Lib '\RichEdit_Editor_v2.ahk' ' ' '"' ftextName '"')
-			; (val := GetFilesSortedByDate(Paths.Lib '\RichEdit_Editor_v2.ahk'), runner := val.ToString(''), Infos(runner), Run(runner))
+			FileDelete(FileSavePath)
+			FileAppend(t, filesavepath)
 		}
-		*/
-		RTEdit()
-		hznRTE := 'Horizon Rich Text Editor - hznRTE -- A Rich Text Editor for Horizon --'
+		Sleep(5000)
+		; FileAppend(t, FileSavePath)
+		; AE.cSleep(100)
+		editor := Quartz()
+		editor := Quartz().OpenFile(FileSavePath)
+		hWndEditor := WinWaitActive('Quartz',,10)
+		Sleep(1000)
+		WinActivate(hWndEditor)
+		; return
+		; AE.cSleep(500)
+		; editor.SetText(t)
+		; RTEdit()
+		; hznRTE := 'Horizon Rich Text Editor - hznRTE -- A Rich Text Editor for Horizon --'
 		; A_Clipboard := ''
 		; Sleep(100)
 		; A_Clipboard := t
@@ -1202,15 +1071,15 @@ Class hznHorizon {
 		;     Sleep(50)
 		; } Until !DllCall('GetOpenClipboardWindow', 'int') || A_Index > 20
 		; hRTE := WinWaitActive(' hznRTE ',,5)
-		hRTE := WinWaitActive(hznRTE,,5)
-		reClassNN := 'RICHEDIT50W2', reHwnd := ControlGetHwnd(reClassNN) 
+		; hRTE := WinWaitActive(hznRTE,,5)
+		; reClassNN := 'RICHEDIT50W2', reHwnd := ControlGetHwnd(reClassNN) 
 		; Infos('reClassNN: ' reClassNN ' (' reHwnd ')')
-		Sleep(100)
-		ControlFocus(reClassNN)
-		pid_RTE := WinGetPID(hRTE)
+		; Sleep(100)
+		; ControlFocus(reClassNN)
+		; pid_RTE := WinGetPID(hRTE)
 		; Send('^{sc2F}') ; SndMsgPaste(reHwnd) ; AE_ReplaceSel(A_Clipboard, reHwnd) ; Send('^+v'); Send('^v')
-		ClipSend(t)
-		ProcessWaitClose(pid_RTE)
+		; ClipSend(t)
+		ProcessWaitClose(hWndEditor)
 		t := ''
 		; AE.rSM(sm)
 		WinActivate(hHzn)
