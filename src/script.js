@@ -62,6 +62,37 @@ options.forEach(opt => {
     })
 }); 
 
+const header = document.querySelector('header');
+header.addEventListener('onmousedown', e => {
+    e.preventDefault();
+    obj = chrome.webview.hostObjects.ahk;
+    obj.drag();
+})
+
+const minimizeBtn = document.getElementById('min-btn');
+minimizeBtn.addEventListener('click', () => {
+    obj = chrome.webview.hostObjects.ahk;
+    obj.minimize();
+});
+
+const maximizeBtn = document.getElementById('max-btn');
+maximizeBtn.addEventListener('click', () => {
+    obj = chrome.webview.hostObjects.ahk;
+    obj.maximize();
+});
+
+const closeBtn = document.getElementById('close-btn');
+close.addEventListener('click', () => {
+    obj = chrome.webview.hostObjects.ahk;
+    obj.close();
+});
+
+//not working to prevent highlighting the menu text
+/* let endTitleBar = document.querySelector('.block-input');
+endTitleBar.addEventListener('click', e => {
+    e.preventDefault();
+}) */   
+
 function newFile() {
     quill.setContents(new Delta());
     quill.focus();
@@ -83,6 +114,14 @@ The contents are:
 ${quill.getText()}`);
     obj = chrome.webview.hostObjects.ahk;
     obj.get(quill.getText());
+}
+
+function saveAsHTML() {
+    console.log(`We are going to pass the editor contents (in HTML) to AHK...
+The contents are: 
+${quill.getSemanticHTML()}`);
+    obj = chrome.webview.hostObjects.ahk;
+    obj.saveHTML(quill.getSemanticHTML());
 }
 
 function exitApp() {

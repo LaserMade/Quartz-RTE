@@ -160,6 +160,36 @@ ul > li:hover {
   text-align: left;
 }
 
+/* title bar buttons  */
+.title-bar-btns {
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+  margin-inline-end: 5px;
+  align-self: flex-end;
+  align-content: center;
+  transform: translateY(-1px);
+  
+}
+
+.title-bar-btns:first-child {
+  transform:rotate(-90deg);
+}
+.title-bar-btns > * {
+  border-radius: 5px;
+  padding: 5px;
+}
+
+
+/* titlebar btn styles. */
+
+.title-bar-btns >*:hover {
+  background-color:antiquewhite;
+  color: black;
+  cursor: pointer;
+}
+
+
 /*------------------- fonts -------------------*/
 /* Set dropdown font-families */
  

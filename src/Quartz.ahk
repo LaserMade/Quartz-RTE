@@ -2,9 +2,9 @@
  * @description Rich Text Editor using AHK and JS/HTML/CSS
  * @file Quartz.ahk
  * @author Laser Made
- * @date 2024/06/20
- * @version 0.4
- * @versioncodename Alpha 4
+ * @date 2024/08/02
+ * @version 0.5
+ * @versioncodename Alpha 5
  ***********************************************************************/
 
 #SingleInstance Force
@@ -38,12 +38,37 @@ RTE.Show("w915 h445")
 WV2 := WebView2.create(RTE.Hwnd)
 HTML := WV2.CoreWebView2
 HTML.Navigate('file:///' path.html)
-HTML.AddHostObjectToScript('ahk', { about: about, OpenFile: OpenFile, SaveFile: SaveFile, get: getText, getHTML: getHTML, exit: Exit })
-RTE.OnEvent('Close', (*) => {function: (
-    HTML := WV2 := 0
-    RTE.Destroy()
-    ExitApp()
-)})
+HTML.AddHostObjectToScript('ahk', { about: about, OpenFile: OpenFile, SaveFile: SaveFile, get: getText, getHTML: getHTML, saveHTML: saveHTML, close: gui_close, minimize: gui_minimize, maximize: gui_maximize, drag: DragTitleBar})
+RTE.OnEvent('Close', gui_close)
+
+gui_close(thisgui){
+    if MsgBox("Are you sure you want to close Quartz?", 'Close Quartz', "y/n") = "No" {
+        return true     ;true means keep it open
+    } else {
+        HTML := WV2 := 0
+        RTE.Destroy()
+        ExitApp()
+        return false    ;false means close it
+    }
+}
+
+gui_minimize(thisgui){
+    RTE.Minimize()
+}
+
+gui_maximize(thisgui){
+    RTE.Maximize()
+}
+
+/**
+ * Function borrowed from Neutron.ahk and modified slightly for use in Quartz.ahk
+ * See original usage in Neutron.ahk lines 581 and 126 for use as a class method
+ */
+DragTitleBar() {
+    PostMessage(WM_NCLBUTTONDOWN := 0xA1, 2, 0, , "ahk_id " RTE.Hwnd)
+    return RTE
+}
+
 
 /**
  * @API
@@ -85,7 +110,7 @@ OpenFile() {
         Sleep 300                           ;wait for the copy to finish, alternatively use ClipWait?
         WinActivate(RTE.Hwnd)
         Eval('quill.focus()')
-        SendMode("Input")                   ;Edge (and by extension, WebView2) only support Input mode
+        SendMode("Input")                   ;Edge (and, by extension, WebView2) only support Input mode
         Send('{ctrl down}{v}{ctrl up}{ctrl down}{home}{ctrl up}')   ;paste the contents of the clipboard and go to the top
         Sleep 500
         A_Clipboard := tempClip
@@ -103,6 +128,17 @@ OpenFile() {
     Eval(script)
 }
 
+;not functional yet
+copyformattedText() {
+    FileOpen('temp.rtf', 'w').Write(HTML.ExecuteScript('quill.getFormattedText()'))
+}
+
+pasteFormattedText() {
+    WinActivate(RTE.Hwnd)
+    Eval('quill.focus()')                  ;Edge (and by extension, WebView2) only support Input mode
+    Send('{ctrl down}{v}{ctrl up}{ctrl down}{home}{ctrl up}') 
+}
+
 SaveFile(content){
     selected := FileSelect('S',, 'Select a file to save', 'Text Files (*.txt; *.html; *.css; *.js; *.ahk; *.ah2; *.ahk2; *.md; *.ini;)')
     if selected = ""
@@ -112,15 +148,19 @@ SaveFile(content){
         if overwrite.result = 'No'
             return
     }
-    FileAppend(content, selected)
+    FileAppend(content, selected, 'UTF-8-RAW')
 }
 
-getText(str) {
-    MsgBox(str)
+getText(text) {
+    MsgBox(text)
 }
 
 getHTML(HtmlStr) {
-    MsgBox(HtmlStr)
+    return HtmlStr
+}
+
+saveHTML(htmlText){
+    SaveFile(htmlText)
 }
 
 setText(str) {
@@ -165,6 +205,10 @@ log(str) {
     input := InputBox('Log a message to the JS console', 'Console.log')
     if input.result != 'cancel'
         log(str := input.value)
+}
+
+#o::{
+    Eval('saveAsHTML()')
 }
 
 NavigationCompletedEventHandler(handler, ICoreWebView2, NavigationCompletedEventArgs) {
@@ -289,6 +333,8 @@ Settings() {
 ^s:: {
     Eval('saveFile();') 
 }
+
+^v::pasteFormattedText()
 
 #HotIf
 

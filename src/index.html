@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-16">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quartz</title>
     <!-- Include Google Fonts -->
@@ -31,15 +31,15 @@
                 File
                 <ul class="submenu">
                   <li class="menu-item"><a onclick="newFile()" ><span class="list-text">New...</span><span class="shortcut_key">Ctrl+N</span></a></li>
-                  <li class="menu-item"><a ><span class="list-text">Save…</span></a></li>
+                  <li class="menu-item"><a onclick="saveFile()" ><span class="list-text">Save…</span></a></li>
                   <li class="menu-item"><a onclick="openFile()" ><span class="list-text">Open…</span><span class="shortcut_key">Ctrl+O</span></a></li>
-                  <li class="menu-item"><a onclick="saveFile()"><span class="list-text">Save As</span><span class="shortcut_key">Ctrl+S</span></a></li>
+                  <li class="menu-item"><a onclick="saveAsHTML()"><span class="list-text">Save As</span><span class="shortcut_key">Ctrl+S</span></a></li>
                   <li class="menu-item"><a onclick="passText()"><span class="list-text">Share as Text</span><span class="shortcut_key">Ctrl+T</span></a></li>
                   <li class="menu-item"><a onclick="passHTML()"><span class="list-text">Share as HTML</span><span class="shortcut_key">Ctrl+H</span></a></li>
                   <li class="menu-item"><a onclick="about()"><span class="list-text">About</span></a></li>
                   <li class="menu-item"><a onclick="exitApp()"><span class="list-text">Exit…</span><span class="shortcut_key">Ctrl+Q</span></a></li>
                 </ul>
-              </li>
+              </li> 
               <li class="titlebar  menu-edit">
                 Edit
                 <ul class="submenu">
@@ -67,6 +67,11 @@
         </ul>
         <div class="block-input">
             
+        </div>
+        <div class="title-bar-btns menu-btns">
+            <span id='min-btn' class="title-bar-btns _offset">|</span>
+            <span id='max-btn' class="title-bar-btns">[]</span>
+            <span id='close-btn' class="title-bar-btns">X</span>
         </div>
 </header>
 <body>
