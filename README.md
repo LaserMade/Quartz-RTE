@@ -1,7 +1,9 @@
 # Quartz RTE
  Rich Text Editor in AHK v2 using Quill JS 
- Quartz text editor uses WebView2 to render QuillJS inside of AHK (v2).
+## Quartz text editor uses WebView2 to render QuillJS inside of AHK (v2).
  It can be used to format text as HTML, Markdown, or for quick content manipulation using JS or AHK.
+
+## ** This program is currently in alpha - features are still being worked on and implemented and there are no guarantees that anything works like it should.
 
  ## Current Features as of v0.3:
 
