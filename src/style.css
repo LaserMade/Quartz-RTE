@@ -43,8 +43,10 @@ div[role="toolbar"] {
   color: black;
   font-size: small;
 }
-
 header {
+  position: sticky;
+}
+.titlebar-container {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -55,7 +57,7 @@ header {
   background-color: darkgray;
   color: white;
   min-height: 35px;
-  position: sticky;
+  position: relative;
   top: 0;
   z-index: 1000;
 }
@@ -65,6 +67,7 @@ header {
   border-radius: 5px;
   font-weight: 500;
   font-size: medium;
+  user-select: none;
 }
 
 .menu-item > a {
@@ -121,17 +124,58 @@ ul > li:hover {
 }
 
 /* Style for main menu items */
-.main-menu > li {
+.main-menu > button {
   position: relative;
-  display: inline-block;
+  display: list-item inline;
+  border: none;
+  background-color: transparent;
+}
+.main-menu > button:hover {
+  background-color: #a9a9a9;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
+.titlebar.menu-file {
+  anchor-name: --file-menu;
+}
+#file-submenu {
+  position-anchor: --file-menu;
+  top: anchor(bottom);
+  left: anchor(left);
+}
+.titlebar.menu-edit {
+  anchor-name: --edit-menu;
+}
+#edit-submenu {
+  position-anchor: --edit-menu;
+  inset: auto;
+  top: anchor(bottom);
+  left: anchor(left);
+}
+.titlebar.menu-view {
+  anchor-name: --view-menu;
+}
+#view-submenu {
+  position-anchor: --view-menu;
+  inset: auto;
+  top: anchor(bottom);
+  left: anchor(left);
+}
+.titlebar.menu-help {
+  anchor-name: --help-menu;
+}
+#help-submenu {
+  position-anchor: --help-menu;
+  inset: auto;
+  top: anchor(bottom);
+  left: anchor(left);
+}
 /* Style for submenu */
 .submenu {
-  display: none;
-  position: absolute;
-  left: 0;
-  top: 100%; /* This positions the submenu right below the main menu item */
+  /* left: 0;
+  top: 100%;  *//* This positions the submenu right below the main menu item */
   list-style-type: none;
   margin: 0px;
   padding: 0px;
@@ -143,11 +187,18 @@ ul > li:hover {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
+dialog {
+  border: none;
+  position: relative;
+  /* top: anchor(bottom);
+  left: anchor(left); */
+}
 
-/* Display submenu on hover */
+
+/* Display submenu on hover 
 .main-menu > li:hover .submenu {
   display: inline-block;
-}
+}*/
 
 .submenu li a {
   text-decoration: none;
@@ -161,7 +212,7 @@ ul > li:hover {
 }
 
 /* title bar buttons  */
-.title-bar-btns {
+.window-bar-btns {
   display: flex;
   flex-direction: row;
   gap: 25px;
@@ -172,18 +223,18 @@ ul > li:hover {
   
 }
 
-.title-bar-btns:first-child {
+.window-bar-btns:first-child {
   transform:rotate(-90deg);
 }
-.title-bar-btns > * {
+.window-bar-btns > * {
   border-radius: 5px;
   padding: 5px;
 }
 
 
-/* titlebar btn styles. */
+/* windowbar btn styles. */
 
-.title-bar-btns >*:hover {
+.window-bar-btns >*:hover {
   background-color:antiquewhite;
   color: black;
   cursor: pointer;
