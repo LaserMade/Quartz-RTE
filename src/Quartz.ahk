@@ -96,10 +96,16 @@ DragTitleBar() {
  * You can also get more info about the com object using:
  * @example MsgBox "Interface name: " ComObjType(doc, "name") "And value : " ComObjValue(doc)
  */
-OpenFile() {
-    selected := FileSelect(,, 'Select a file to open', 'Text Files (*.txt; *.rtf; *.html; *.css; *.js; *.ahk; *.ah2; *.ahk2; *.md; *.ini;)')
-    if selected = "" || !FileExist(selected)
-        return
+OpenFile(fileName?) {
+    if IsSet(fileName) {
+        selected := fileName
+    } else {
+        selected := FileSelect(,, 'Select a file to open', 'Text Files (*.txt; *.rtf; *.html; *.css; *.js; *.ahk; *.ah2; *.ahk2; *.md; *.ini;)')
+    }
+    ;selected := FileSelect(,, 'Select a file to open', 'Text Files (*.txt; *.rtf; *.html; *.css; *.js; *.ahk; *.ah2; *.ahk2; *.md; *.ini;)')
+    if selected = "" || !FileExist(selected) {
+        throw TargetError("File not found: " selected)
+    }
     
     if selected.includes('.rtf') {          ;manually handle rtf file insert using clipboard and ComObjects
         doc := ComObjGet(selected)
@@ -126,6 +132,10 @@ OpenFile() {
     }
     script := script '{insert: "\n"}]);'                ;new lines must be added at the end of a delta
     Eval(script)
+}
+
+OpenRTF() {
+    ;https://github.com/iarna/rtf-to-html
 }
 
 ;not functional yet

@@ -1,2 +1,4 @@
 /.ignore
 Quartz-RTE.code-workspace
+/resources/*
+/rtf-parser/*
